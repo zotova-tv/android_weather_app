@@ -1,8 +1,9 @@
 package ru.gb.weather.model
 
-import org.json.JSONException
+import ru.gb.weather.R
 
 class RepositoryImpl : Repository {
+
     override fun getWeatherFromServer(): Weather {
         return Weather()
     }
@@ -10,7 +11,7 @@ class RepositoryImpl : Repository {
     override fun getWeatherFromLocalStorage(): Weather {
         return when((0..1).random()){
             0 -> Weather()
-            1 -> throw Exception("Something went wrong")
+            1 -> throw Exception(R.string.refresh.toString())
             else -> Weather()
         }
     }
