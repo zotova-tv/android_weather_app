@@ -58,6 +58,8 @@ class MainFragment : Fragment() {
         when(appState) {
             is AppState.Success -> {
                 val weatherData = appState.weatherData
+                println("creation date " + weatherData.creationDate)
+                println("current date " + weatherData.date)
                 binding.loadingLayout.visibility = View.GONE
                 Snackbar.make(binding.mainView, "Success", Snackbar.LENGTH_LONG).show()
 
@@ -81,13 +83,14 @@ class MainFragment : Fragment() {
     }
 
     private fun setData(weatherData: Weather) {
-         binding.cityName.text = weatherData.city.city
-         binding.cityCoordinates.text = String.format(
-             getString(R.string.city_coordinates),
-             weatherData.city.lat.toString(),
-             weatherData.city.lon.toString()
-         )
-         binding.temperatureValue.text = weatherData.temperature.toString()
-         binding.feelsLikeValue.text = weatherData.feelsLike.toString()
+        binding.cityName.text = weatherData.city.city
+        binding.cityCoordinates.text = String.format(
+            getString(R.string.city_coordinates),
+            weatherData.city.lat.toString(),
+            weatherData.city.lon.toString()
+        )
+        binding.temperatureValue.text = weatherData.temperature.toString()
+        binding.feelsLikeValue.text = weatherData.feelsLike.toString()
+        binding.date.text = weatherData.getDateFormatted()
     }
 }
