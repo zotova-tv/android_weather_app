@@ -68,7 +68,7 @@ fun getRussianCities(): List<Weather> {
     )
 }
 
-// curl --header "X-Yandex-API-Key: 9c03de6f-653a-4cf7-8fd4-1bc659a1e71a" "https://api.weather.yandex.ru/v2/informers?lat=55.755826&lon=37.617299900000035"
+// curl --header "X-Yandex-API-Key: key" "https://api.weather.yandex.ru/v2/informers?lat=55.755826&lon=37.617299900000035"
 /*
 * {
 	"now": 1644749580,
