@@ -88,4 +88,9 @@ class MainFragment : Fragment() {
     companion object {
         fun newInstance() = MainFragment()
     }
+
+    override fun onDestroy() {
+        adapter.removeListener()
+        super.onDestroy()
+    }
 }
