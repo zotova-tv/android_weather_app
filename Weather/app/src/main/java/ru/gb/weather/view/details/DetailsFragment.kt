@@ -58,7 +58,8 @@ class DetailsFragment : Fragment() {
                             TEMP_INVALID,
                             FEELS_LIKE_INVALID,
                             DETAILS_CONDITION_EXTRA
-                        )
+                        ),
+                        null
                     )
                     displayWeather(weatherDTO)
                 }
@@ -72,7 +73,6 @@ class DetailsFragment : Fragment() {
         context?.let {
             LocalBroadcastManager.getInstance(it).apply {
                 registerReceiver(loadResultsReceiver, IntentFilter(DETAILS_INTENT_FILTER))
-                registerReceiver(connectivityActionBroadcastReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
             }
 
         }
@@ -201,19 +201,5 @@ class DetailsFragment : Fragment() {
         length: Int = Snackbar.LENGTH_INDEFINITE
     ) {
         Snackbar.make(this, getString(resourceText), length).setAction(getString(resourceActionText), action).show()
-    }
-
-    private val connectivityActionBroadcastReceiver = object : BroadcastReceiver() {
-
-        override fun onReceive(context: Context, intent: Intent) {
-            Log.d(TAG, "onReceive() called with: context = $context, intent = $intent")
-            StringBuilder().apply {
-                append("СООБЩЕНИЕ ОТ СИСТЕМЫ\n")
-                append("Action: ${intent.action}")
-                toString().also {
-                    Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
     }
 }

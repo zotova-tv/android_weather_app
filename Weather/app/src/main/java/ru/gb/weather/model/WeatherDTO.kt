@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class WeatherDTO (
     val fact: FactDTO?,
-    val forecast: ForecastDTO? = null
+    val forecast: ForecastDTO?
 ) : Parcelable
 
 @Parcelize
