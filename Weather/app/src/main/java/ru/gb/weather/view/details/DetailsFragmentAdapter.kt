@@ -48,6 +48,6 @@ class DetailsFragmentAdapter :
     }
 
     companion object {
-        const val TAG = "lalala DetailsFragmentAdapter"
+        const val TAG = "DetailsFragmentAdapter TAG"
     }
 }

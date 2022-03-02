@@ -1,19 +1,36 @@
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
-import ru.gb.kotlinapp.view.details.WeatherLoader
 import ru.gb.weather.R
 import ru.gb.weather.databinding.FragmentDetailsBinding
 import ru.gb.weather.model.*
-import ru.gb.weather.view.details.DetailsFragmentAdapter
-import java.net.MalformedURLException
+import ru.gb.weather.view.details.*
 import java.text.SimpleDateFormat
 import java.util.*
+
+const val DETAILS_INTENT_FILTER = "DETAILS INTENT FILTER"
+const val DETAILS_LOAD_RESULT_EXTRA = "LOAD RESULT"
+const val DETAILS_INTENT_EMPTY_EXTRA = "INTENT IS EMPTY"
+const val DETAILS_DATA_EMPTY_EXTRA = "DATA IS EMPTY"
+const val DETAILS_RESPONSE_EMPTY_EXTRA = "RESPONSE IS EMPTY"
+const val DETAILS_REQUEST_ERROR_EXTRA = "REQUEST ERROR"
+const val DETAILS_REQUEST_ERROR_MESSAGE_EXTRA = "REQUEST ERROR MESSAGE"
+const val DETAILS_URL_MALFORMED_EXTRA = "URL MALFORMED"
+const val DETAILS_RESPONSE_SUCCESS_EXTRA = "RESPONSE SUCCESS"
+const val DETAILS_CONDITION_EXTRA = "CONDITION"
+private const val TEMP_INVALID = -100
+private const val FEELS_LIKE_INVALID = -100
+private const val PROCESS_ERROR = "Обработка ошибки"
 
 class DetailsFragment : Fragment() {
 
@@ -21,38 +38,55 @@ class DetailsFragment : Fragment() {
     private val binding get() = _binding!!
     private val adapter = DetailsFragmentAdapter()
 
-    private lateinit var loader: WeatherLoader
     private lateinit var weatherBundle: Weather
 
-    private val onLoadListener: WeatherLoader.WeatherLoaderListener =
-        object : WeatherLoader.WeatherLoaderListener {
+    private val loadResultsReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.getStringExtra(DETAILS_LOAD_RESULT_EXTRA)) {
+                DETAILS_INTENT_EMPTY_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_DATA_EMPTY_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_RESPONSE_EMPTY_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_REQUEST_ERROR_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_REQUEST_ERROR_MESSAGE_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_URL_MALFORMED_EXTRA -> TODO(PROCESS_ERROR)
 
-            override fun onLoaded(weatherDTO: WeatherDTO) {
-                displayWeather(weatherDTO)
-            }
-
-            override fun onFailed(throwable: Throwable) {
-                Log.d(TAG, "onFailed() called with: throwable = $throwable")
-                with(binding){
-                    mainView.show()
-                    loadingLayout.hide()
-                }
-                when (throwable) {
-                    is MalformedURLException -> binding.detailFragmentRootView.showSnackBar(
-                        R.string.sorry_error
+                DETAILS_RESPONSE_SUCCESS_EXTRA -> {
+                    val weatherDTO = intent.getParcelableExtra(
+                        WEATHER_EXTRA
+                    ) ?: WeatherDTO(
+                        FactDTO(
+                            TEMP_INVALID,
+                            FEELS_LIKE_INVALID,
+                            DETAILS_CONDITION_EXTRA
+                        )
                     )
-                    else -> binding.detailFragmentRootView.showActionSnackBar(
-                        R.string.connection_error,
-                        R.string.reload,
-                        { loader.loadWeather() }
-                    )
+                    displayWeather(weatherDTO)
                 }
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        context?.let {
+            LocalBroadcastManager.getInstance(it).apply {
+                registerReceiver(loadResultsReceiver, IntentFilter(DETAILS_INTENT_FILTER))
+                registerReceiver(connectivityActionBroadcastReceiver, IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED))
+            }
+
+        }
+    }
+
+    override fun onDestroy() {
+        context?.let {
+            LocalBroadcastManager.getInstance(it).unregisterReceiver(loadResultsReceiver)
+        }
+        super.onDestroy()
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         return binding.root
@@ -61,13 +95,20 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         weatherBundle = arguments?.getParcelable<Weather>(BUNDLE_EXTRA) ?: Weather()
+        getWeather()
+    }
+
+    private fun getWeather() {
         with(binding){
             mainView.hide()
             loadingLayout.show()
         }
 
-        loader = WeatherLoader(onLoadListener, weatherBundle.city.lat, weatherBundle.city.lon).also{
-            it.loadWeather()
+        context?.let {
+            it.startService(Intent(it, DetailsService::class.java).apply {
+                putExtra(LATITUDE_EXTRA,  weatherBundle.city.lat)
+                putExtra(LONGITUDE_EXTRA, weatherBundle.city.lon)
+            })
         }
     }
 
@@ -80,8 +121,8 @@ class DetailsFragment : Fragment() {
                 cityName.text = this.city
                 cityCoordinates.text = String.format(
                     getString(R.string.city_coordinates),
-                    this.lat.toString(),
-                    this.lon.toString()
+                    lat.toString(),
+                    lon.toString()
                 )
             }
 
@@ -160,5 +201,19 @@ class DetailsFragment : Fragment() {
         length: Int = Snackbar.LENGTH_INDEFINITE
     ) {
         Snackbar.make(this, getString(resourceText), length).setAction(getString(resourceActionText), action).show()
+    }
+
+    private val connectivityActionBroadcastReceiver = object : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent) {
+            Log.d(TAG, "onReceive() called with: context = $context, intent = $intent")
+            StringBuilder().apply {
+                append("СООБЩЕНИЕ ОТ СИСТЕМЫ\n")
+                append("Action: ${intent.action}")
+                toString().also {
+                    Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 }
