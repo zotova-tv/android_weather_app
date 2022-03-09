@@ -2,8 +2,7 @@ package ru.gb.weather.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import java.text.DateFormat
-import java.text.SimpleDateFormat
+import ru.gb.weather.utils.WeatherUtils
 import java.util.*
 
 @Parcelize

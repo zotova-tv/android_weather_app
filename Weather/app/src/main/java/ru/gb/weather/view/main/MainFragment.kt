@@ -9,6 +9,8 @@ import com.google.android.material.snackbar.Snackbar
 import ru.gb.weather.R
 import ru.gb.weather.databinding.FragmentMainBinding
 import ru.gb.weather.model.Weather
+import ru.gb.weather.utils.hide
+import ru.gb.weather.utils.show
 import ru.gb.weather.view.main.MainFragmentAdapter
 import ru.gb.weather.viewmodel.AppState
 import ru.gb.weather.viewmodel.MainViewModel
@@ -97,20 +99,6 @@ class MainFragment : Fragment() {
         length: Int = Snackbar.LENGTH_SHORT
     ) {
         Snackbar.make(this, getString(resourceText), length).show()
-    }
-
-    private fun View.show(): View {
-        if(visibility != View.VISIBLE){
-            visibility = View.VISIBLE
-        }
-        return this
-    }
-
-    private fun View.hide(): View {
-        if(visibility != View.GONE){
-            visibility = View.GONE
-        }
-        return this
     }
 
     interface OnItemViewClickListener {

@@ -3,17 +3,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import ru.gb.weather.R
 import ru.gb.weather.databinding.FragmentDetailsBinding
 import ru.gb.weather.model.*
+import ru.gb.weather.utils.WeatherUtils
+import ru.gb.weather.utils.hide
+import ru.gb.weather.utils.show
 import ru.gb.weather.view.details.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -171,20 +172,6 @@ class DetailsFragment : Fragment() {
             }
             return fragment
         }
-    }
-
-    private fun View.show(): View {
-        if(visibility != View.VISIBLE){
-            visibility = View.VISIBLE
-        }
-        return this
-    }
-
-    private fun View.hide(): View {
-        if(visibility != View.GONE){
-            visibility = View.GONE
-        }
-        return this
     }
 
     private fun View.showSnackBar(
