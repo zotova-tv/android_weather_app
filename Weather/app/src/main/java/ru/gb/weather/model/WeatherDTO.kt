@@ -13,7 +13,8 @@ data class WeatherDTO (
 data class FactDTO(
     val temp: Int?,
     val feels_like: Int?,
-    val condition: String?
+    val condition: String?,
+    val icon: String?
 ) : Parcelable
 
 @Parcelize
@@ -22,13 +23,14 @@ data class ForecastDTO(
     val week: Int?,
     var sunrise: String?,
     val sunset: String?,
-    var parts: List<ForecastPartDTO>
+    var parts: List<ForecastPartDTO> = listOf()
 ) : Parcelable
 
 @Parcelize
 data class ForecastPartDTO(
     var part_name: String?,
-    var temp_avg: Int?
+    var temp_avg: Int?,
+    var icon: String? = null
 ) : Parcelable
 
 

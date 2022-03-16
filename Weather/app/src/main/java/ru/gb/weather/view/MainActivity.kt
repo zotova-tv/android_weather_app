@@ -1,6 +1,5 @@
 package ru.gb.weather.view
 
-import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import ru.gb.weather.databinding.MainActivityBinding
@@ -21,6 +20,5 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, MainFragment.newInstance())
                 .commitNow()
         }
-        registerReceiver(MainBroadcastReceiver(), IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION))
     }
 }

@@ -4,9 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.gb.weather.model.Repository
 import ru.gb.weather.model.RepositoryImpl
-import ru.gb.weather.model.Weather
 import java.lang.Thread.sleep
-import kotlin.random.Random
 
 class MainViewModel(
     private val liveDataToObserve : MutableLiveData<AppState> = MutableLiveData(),

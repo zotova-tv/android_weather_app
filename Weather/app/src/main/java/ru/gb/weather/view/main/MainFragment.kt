@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import ru.gb.weather.R
 import ru.gb.weather.databinding.FragmentMainBinding
 import ru.gb.weather.model.Weather
 import ru.gb.weather.utils.hide
 import ru.gb.weather.utils.show
+import ru.gb.weather.utils.showActionSnackBar
 import ru.gb.weather.view.main.MainFragmentAdapter
 import ru.gb.weather.viewmodel.AppState
 import ru.gb.weather.viewmodel.MainViewModel
@@ -77,28 +77,12 @@ class MainFragment : Fragment() {
             is AppState.Error -> {
                 binding.mainFragmentLoadingLayout.hide()
                 binding.mainFragmentRootView.showActionSnackBar(
-                    R.string.error,
-                    R.string.reload,
+                    getString(R.string.error),
+                    getString(R.string.reload),
                     { viewModel.getWeatherFromLocalSourceRus() }
                 )
             }
         }
-    }
-
-    private fun View.showActionSnackBar(
-        resourceText: Int,
-        resourceActionText: Int,
-        action: (View) -> Unit,
-        length: Int = Snackbar.LENGTH_INDEFINITE
-    ) {
-        Snackbar.make(this, getString(resourceText), length).setAction(getString(resourceActionText), action).show()
-    }
-
-    private fun View.showSnackBar(
-        resourceText: Int,
-        length: Int = Snackbar.LENGTH_SHORT
-    ) {
-        Snackbar.make(this, getString(resourceText), length).show()
     }
 
     interface OnItemViewClickListener {
