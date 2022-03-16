@@ -23,4 +23,11 @@
     <dimen name="weather_icon_width">150dp</dimen>
     <dimen name="weather_icon_height">150dp</dimen>
     <dimen name="weather_icon_margin">110dp</dimen>
+    <dimen name="date_margin_top">100dp</dimen>
+    <dimen name="date_text_size">20sp</dimen>
+    <dimen name="condition_icon_width">100sp</dimen>
+    <dimen name="condition_icon_height">100sp</dimen>
+    <dimen name="condition_icon_margin">50sp</dimen>
+    <dimen name="forecast_icon_width">50sp</dimen>
+    <dimen name="forecast_icon_height">50sp</dimen>
 </resources>

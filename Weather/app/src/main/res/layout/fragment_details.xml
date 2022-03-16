@@ -26,8 +26,8 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:textSize="20sp"
+            android:layout_marginTop="@dimen/date_margin_top"
+            android:textSize="@dimen/date_text_size"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,10 +70,10 @@
 
         <ImageView
             android:id="@+id/conditionIcon"
-            android:layout_width="100sp"
-            android:layout_height="100sp"
+            android:layout_width="@dimen/condition_icon_width"
+            android:layout_height="@dimen/condition_icon_height"
             android:scaleType="fitXY"
-            android:layout_marginTop="50sp"
+            android:layout_marginTop="@dimen/condition_icon_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/weatherCondition" />

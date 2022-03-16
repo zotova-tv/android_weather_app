@@ -29,8 +29,8 @@
             android:textColor="@color/light_grey"/>
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/forecast_icon"
-            android:layout_width="50sp"
-            android:layout_height="50sp"
+            android:layout_width="@dimen/forecast_icon_width"
+            android:layout_height="@dimen/forecast_icon_height"
             android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
