@@ -12,7 +12,6 @@ import ru.gb.weather.model.ForecastPart
 class DetailsFragmentAdapter :
     RecyclerView.Adapter<DetailsFragmentAdapter.DetailsViewHolder>() {
 
-    private val TAG = "lalala DetailsFragmentAdapter"
     private var forecastParts: List<ForecastPart> = listOf()
 
     fun setForecastParts(data: List<ForecastPart>) {
@@ -46,5 +45,9 @@ class DetailsFragmentAdapter :
             itemView.findViewById<TextView>(R.id.forecast_name).text = forecastPart.name.timeOfDay
             itemView.findViewById<TextView>(R.id.forecast_temp).text = forecastPart.getTemperatureString()
         }
+    }
+
+    companion object {
+        const val TAG = "lalala DetailsFragmentAdapter"
     }
 }
