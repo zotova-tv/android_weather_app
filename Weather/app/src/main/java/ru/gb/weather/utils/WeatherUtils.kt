@@ -1,4 +1,4 @@
-package ru.gb.weather.model
+package ru.gb.weather.utils
 
 class WeatherUtils {
     companion object {

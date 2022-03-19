@@ -1,9 +1,8 @@
 package ru.gb.weather.model
 
 import android.os.Parcelable
-import androidx.core.content.res.TypedArrayUtils.getString
 import kotlinx.android.parcel.Parcelize
-import ru.gb.weather.R
+import ru.gb.weather.utils.WeatherUtils
 
 @Parcelize
 class ForecastPart(val name: ForecastName, val temperature: Int = 0): Parcelable {

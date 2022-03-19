@@ -3,6 +3,7 @@
     package="ru.gb.weather">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,6 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Weather">
+
+        <service
+            android:name=".view.details.DetailsService"
+            android:exported="false" />
+
         <activity
             android:name=".view.MainActivity"
             android:exported="true">
