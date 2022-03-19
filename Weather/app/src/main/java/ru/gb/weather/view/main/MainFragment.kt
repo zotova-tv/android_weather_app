@@ -18,15 +18,16 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this)[MainViewModel::class.java]
+    }
     private val adapter = MainFragmentAdapter(object : OnItemViewClickListener {
         override fun onItemViewClick(weather: Weather) {
-            val manager = activity?.supportFragmentManager
-            if (manager != null) {
-                val bundle = Bundle()
-                bundle.putParcelable(DetailsFragment.BUNDLE_EXTRA, weather)
-                manager.beginTransaction()
-                    .add(R.id.container, DetailsFragment.newInstance(bundle))
+            activity?.supportFragmentManager?.apply{
+                beginTransaction()
+                    .add(R.id.container, DetailsFragment.newInstance(
+                        Bundle().apply {putParcelable(DetailsFragment.BUNDLE_EXTRA, weather)}
+                    ))
                     .addToBackStack("")
                     .commitAllowingStateLoss()
             }
@@ -39,14 +40,13 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.getRoot()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.mainFragmentRecyclerView.adapter = adapter
         binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) })
         viewModel.getWeatherFromLocalSourceRus()
     }
@@ -58,27 +58,59 @@ class MainFragment : Fragment() {
         } else {
             viewModel.getWeatherFromLocalSourceRus()
             binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
+        }.also {
+            isDataSetRus = !isDataSetRus
         }
-        isDataSetRus = !isDataSetRus
     }
 
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                binding.mainFragmentLoadingLayout.hide()
                 adapter.setWeather(appState.weatherData)
             }
             is AppState.Loading -> {
-                binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
+                binding.mainFragmentLoadingLayout.show()
             }
             is AppState.Error -> {
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
-                Snackbar
-                    .make(binding.mainFragmentFAB, getString(R.string.error), Snackbar.LENGTH_INDEFINITE)
-                    .setAction(getString(R.string.reload)) { viewModel.getWeatherFromLocalSourceRus() }
-                    .show()
+                binding.mainFragmentLoadingLayout.hide()
+                binding.mainFragmentRootView.showActionSnackBar(
+                    R.string.error,
+                    R.string.reload,
+                    { viewModel.getWeatherFromLocalSourceRus() }
+                )
             }
         }
+    }
+
+    private fun View.showActionSnackBar(
+        resourceText: Int,
+        resourceActionText: Int,
+        action: (View) -> Unit,
+        length: Int = Snackbar.LENGTH_INDEFINITE
+    ) {
+        Snackbar.make(this, getString(resourceText), length).setAction(getString(resourceActionText), action).show()
+    }
+
+    private fun View.showSnackBar(
+        resourceText: Int,
+        length: Int = Snackbar.LENGTH_SHORT
+    ) {
+        Snackbar.make(this, getString(resourceText), length).show()
+    }
+
+    private fun View.show(): View {
+        if(visibility != View.VISIBLE){
+            visibility = View.VISIBLE
+        }
+        return this
+    }
+
+    private fun View.hide(): View {
+        if(visibility != View.GONE){
+            visibility = View.GONE
+        }
+        return this
     }
 
     interface OnItemViewClickListener {
