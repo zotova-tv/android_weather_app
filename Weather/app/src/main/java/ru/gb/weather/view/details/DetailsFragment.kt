@@ -1,7 +1,5 @@
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,12 +11,15 @@ import ru.gb.weather.R
 import ru.gb.weather.databinding.FragmentDetailsBinding
 import ru.gb.weather.model.*
 import ru.gb.weather.utils.*
+import ru.gb.weather.view.AddNoteFragment
 import ru.gb.weather.view.details.*
+import ru.gb.weather.view.history.HistoryFragment
 import ru.gb.weather.viewmodel.AppState
 import ru.gb.weather.viewmodel.DetailsViewModel
 
 const val ICON_PATH = "https://yastatic.net/weather/i/icons/funky/dark/"
 const val ICON_EXT = ".svg"
+const val ADD_NOTE_FRAGMENT_KEY = "ADD_NOTE_FRAGMENT"
 
 class DetailsFragment : Fragment() {
 
@@ -29,12 +30,13 @@ class DetailsFragment : Fragment() {
     private lateinit var weatherBundle: Weather
 
     private val viewModel: DetailsViewModel by lazy {
-        ViewModelProvider(this).get(DetailsViewModel::class.java)
+        ViewModelProvider(this)[DetailsViewModel::class.java]
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(true);
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -50,16 +52,16 @@ class DetailsFragment : Fragment() {
         when (appState) {
             is AppState.Success -> {
                 binding.mainView.show()
-                binding.loadingLayout.hide()
+                binding.includedLoadingLayout.loadingLayout.hide()
                 setWeather(appState.weatherData[0])
             }
             is AppState.Loading -> {
                 binding.mainView.hide()
-                binding.loadingLayout.show()
+                binding.includedLoadingLayout.loadingLayout.show()
             }
             is AppState.Error -> {
                 binding.mainView.show()
-                binding.loadingLayout.hide()
+                binding.includedLoadingLayout.loadingLayout.hide()
                 binding.mainView.showActionSnackBar(
                     getString(R.string.error),
                     getString(R.string.reload),
@@ -76,6 +78,9 @@ class DetailsFragment : Fragment() {
 
     private fun setWeather(weather: Weather) {
         val city = weatherBundle.city
+
+        saveCity(city, weather)
+
         binding.cityName.text = city.city
         binding.cityCoordinates.text = String.format(
             getString(R.string.city_coordinates),
@@ -106,7 +111,17 @@ class DetailsFragment : Fragment() {
             .into(binding.headerIcon)
     }
 
-    // fun Date.getFormattedDate(format: String = "dd MMMM YYYY"): String = SimpleDateFormat(format, Locale.getDefault()).format(this)
+    private fun saveCity(
+        city: City,
+        weather: Weather
+    ) {
+        viewModel.saveCityToDB(Weather(
+            city,
+            weather.temperature,
+            weather.feelsLike,
+            weather.condition)
+        )
+    }
 
     companion object {
 
@@ -118,6 +133,27 @@ class DetailsFragment : Fragment() {
                 arguments = bundle
             }
             return fragment
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.details_menu, menu)
+        return super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+
+            R.id.menu_note -> {
+                this.parentFragmentManager.apply {
+                    beginTransaction()
+                        .add(R.id.container, AddNoteFragment.newInstance(weatherBundle))
+                        .addToBackStack(ADD_NOTE_FRAGMENT_KEY)
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

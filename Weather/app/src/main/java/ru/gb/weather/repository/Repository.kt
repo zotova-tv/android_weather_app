@@ -1,4 +1,6 @@
-package ru.gb.weather.model
+package ru.gb.weather.repository
+
+import ru.gb.weather.model.Weather
 
 interface Repository {
     fun getWeatherFromServer(): Weather

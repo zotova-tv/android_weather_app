@@ -2,6 +2,7 @@ package ru.gb.weather.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 import ru.gb.weather.utils.WeatherUtils
 import java.util.*
 
@@ -12,7 +13,8 @@ class Weather(
     val feelsLike: Int = 0,
     val condition: String = "sunny",
     val icon: String? = null,
-    val dateUnixTime: Long = System.currentTimeMillis() / 1000, // 1522702800
+    val dateUnixTime: @RawValue Long = System.currentTimeMillis() / 1000, // 1522702800
+    val notes: @RawValue MutableList<Note> = mutableListOf(),
     val forecastParts: MutableList<ForecastPart> = mutableListOf()
 ) : Parcelable {
     val creationDateMillis: Long = System.currentTimeMillis()

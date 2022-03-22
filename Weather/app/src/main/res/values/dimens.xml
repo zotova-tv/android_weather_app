@@ -30,4 +30,12 @@
     <dimen name="condition_icon_margin">50sp</dimen>
     <dimen name="forecast_icon_width">50sp</dimen>
     <dimen name="forecast_icon_height">50sp</dimen>
+    <dimen name="hairline">1dp</dimen>
+    <dimen name="comment_title_text_size">20sp</dimen>
+    <dimen name="comment_title_margin_bottom">30sp</dimen>
+    <dimen name="comment_edit_text_height">300sp</dimen>
+    <dimen name="comment_edit_text_padding">10sp</dimen>
+    <dimen name="save_comment_text_size">20sp</dimen>
+    <dimen name="add_comment_padding">10sp</dimen>
+    <dimen name="fragment_history_padding">5dp</dimen>
 </resources>
