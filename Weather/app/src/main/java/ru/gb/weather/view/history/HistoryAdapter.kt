@@ -30,7 +30,6 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.RecyclerItemViewHolde
                 for(note: Note in data.notes){
                     commentText += note.text + "\n"
                 }
-                println(commentText)
                 itemView.comments.text = commentText
                 itemView.setOnClickListener {
                     Toast.makeText(

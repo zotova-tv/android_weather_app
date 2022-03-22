@@ -53,7 +53,6 @@ class MainFragment : Fragment() {
         binding.mainFragmentRecyclerView.adapter = adapter
         binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) })
-        // viewModel.getWeatherFromLocalSourceRus()
         showListOfTowns()
     }
 

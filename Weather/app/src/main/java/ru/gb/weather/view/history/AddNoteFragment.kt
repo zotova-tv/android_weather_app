@@ -1,4 +1,4 @@
-package ru.gb.weather.view
+package ru.gb.weather.view.history
 
 import android.os.Bundle
 import android.view.*
@@ -76,6 +76,7 @@ class AddNoteFragment : Fragment() {
     }
 
     companion object {
+        @JvmStatic
         fun newInstance(weather: Weather) =
             AddNoteFragment().apply {
                 arguments = Bundle().apply {

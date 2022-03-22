@@ -7,6 +7,7 @@ import ru.gb.weather.model.room.HistoryDataBase
 import ru.gb.weather.model.room.NoteDao
 import java.lang.IllegalStateException
 
+
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
@@ -19,7 +20,6 @@ class App : Application() {
         private const val DB_NAME = "History.db"
 
         private fun getDb(): HistoryDataBase {
-            // appInstance!!.applicationContext.deleteDatabase(DB_NAME)
             synchronized(HistoryDataBase::class.java) {
                 if (db == null) {
                     if (appInstance == null) throw IllegalStateException("APP must not be null")
@@ -29,7 +29,6 @@ class App : Application() {
                         HistoryDataBase::class.java,
                         DB_NAME
                     )
-                        //.allowMainThreadQueries()
                         .build()
                 }
                 return db!!

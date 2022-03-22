@@ -14,6 +14,11 @@ import ru.gb.weather.utils.convertHistoryEntityToWeather
 import ru.gb.weather.utils.convertNoteEntityListToNoteList
 import ru.gb.weather.utils.convertWeatherToEntity
 
+
+private const val GET_ALL_HISTORY_THREAD_NAME = "GET_ALL_HISTORY_THREAD"
+private const val GET_HISTORY_THREAD_NAME = "GET_HISTORY_THREAD"
+private const val SAVE_HISTORY_THREAD_NAME = "SAVE_HISTORY_THREAD"
+
 class LocalRepositoryImpl(
     private val localHistoryDataSource: HistoryDao = App.getHistoryDao(),
     private val localNoteDataSource: NoteDao = App.getNoteDao()
@@ -21,26 +26,20 @@ class LocalRepositoryImpl(
     override fun getAllHistory(): List<Weather> {
         val weatherList = mutableListOf<Weather>()
 
-        val handlerThread = HandlerThread("GET_ALL_HISTORY_THREAD")
+        val handlerThread = HandlerThread(GET_ALL_HISTORY_THREAD_NAME)
         handlerThread.start()
         val handler = Handler(handlerThread.looper)
         handler.post {
             val historyEntities = localHistoryDataSource.all()
-            println("history " + historyEntities)
             for (historyEntity: HistoryEntity in historyEntities) {
                 val notes = convertNoteEntityListToNoteList(localNoteDataSource.selectAllByHistoryId(historyEntity.id))
-                println("Notes " + notes)
                 val weather = convertHistoryEntityToWeather(historyEntity)
                 for(note: Note in notes){
                     weather.notes.add(note)
                 }
                 weatherList.add(weather)
-
             }
-            println("thread weather list " + weatherList)
-            println(Thread.currentThread().name)
         }
-
         handlerThread.quitSafely()
         handlerThread.join()
         return weatherList
@@ -48,7 +47,7 @@ class LocalRepositoryImpl(
 
     override fun getHistory(id: Long): Weather? {
         var weather: Weather? = null
-        val handlerThread = HandlerThread("GET_HISTORY_THREAD")
+        val handlerThread = HandlerThread(GET_HISTORY_THREAD_NAME)
         handlerThread.start()
         Handler(handlerThread.looper).post {
             val historyEntityList = localHistoryDataSource.get(id)
@@ -71,7 +70,7 @@ class LocalRepositoryImpl(
     }
 
     override fun saveEntity(weather: Weather) {
-        val handlerThread = HandlerThread("SAVE_HISTORY")
+        val handlerThread = HandlerThread(SAVE_HISTORY_THREAD_NAME)
         handlerThread.start()
         val handler = Handler(handlerThread.looper)
         handler.post {

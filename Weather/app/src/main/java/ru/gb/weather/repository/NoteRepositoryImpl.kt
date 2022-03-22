@@ -9,6 +9,8 @@ import ru.gb.weather.model.room.NoteDao
 import ru.gb.weather.utils.convertNoteEntityListToNoteList
 import ru.gb.weather.utils.convertNoteToNoteEntity
 
+private const val SAVE_NOTE_THREAD_NAME = "SAVE_NOTE_THREAD"
+
 class NoteRepositoryImpl(
     private val localNoteDataSource: NoteDao = App.getNoteDao(),
     private val localHistoryDataSource: HistoryDao = App.getHistoryDao()
@@ -18,7 +20,7 @@ class NoteRepositoryImpl(
     }
 
     override fun saveNote(note: Note) {
-        val handlerThread = HandlerThread("SAVE_NOTE")
+        val handlerThread = HandlerThread(SAVE_NOTE_THREAD_NAME)
         handlerThread.start()
         Handler(handlerThread.looper).post {
             note.weather?.let {

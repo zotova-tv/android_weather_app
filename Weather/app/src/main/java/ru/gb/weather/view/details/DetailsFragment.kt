@@ -11,9 +11,8 @@ import ru.gb.weather.R
 import ru.gb.weather.databinding.FragmentDetailsBinding
 import ru.gb.weather.model.*
 import ru.gb.weather.utils.*
-import ru.gb.weather.view.AddNoteFragment
+import ru.gb.weather.view.history.AddNoteFragment
 import ru.gb.weather.view.details.*
-import ru.gb.weather.view.history.HistoryFragment
 import ru.gb.weather.viewmodel.AppState
 import ru.gb.weather.viewmodel.DetailsViewModel
 
