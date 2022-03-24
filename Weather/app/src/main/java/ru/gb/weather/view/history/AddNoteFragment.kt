@@ -1,7 +1,11 @@
 package ru.gb.weather.view.history
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -54,6 +58,11 @@ class AddNoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.noteLiveData.observe(viewLifecycleOwner, Observer { renderData(it) })
         binding.saveNote.setOnClickListener {
+            activity?.let {notNullActivity ->
+                val inputMethodManager = notNullActivity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+
             val text = binding.noteText.text.toString()
             if(text != EMPTY_STRING){
                 viewModel.saveNote(Note(text, weatherBundle))
