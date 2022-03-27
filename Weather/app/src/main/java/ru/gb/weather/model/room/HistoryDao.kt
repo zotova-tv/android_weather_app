@@ -7,7 +7,7 @@ interface HistoryDao {
     @Query("SELECT * FROM HistoryEntity")
     fun all() : List<HistoryEntity>
 
-    @Query("SELECT * FROM HistoryEntity WHERE date >= :dateFrom AND date <= :dateTo")
+    @Query("SELECT * FROM HistoryEntity WHERE date >= :dateFrom AND date <= :dateTo ORDER BY date DESC")
     fun selectByDatesInterval(dateFrom: Long, dateTo: Long) : List<HistoryEntity>
 
     @Query("SELECT * FROM HistoryEntity WHERE id = :id")

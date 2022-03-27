@@ -77,7 +77,6 @@ class DetailsFragment : Fragment() {
 
     private fun setWeather(weather: Weather) {
         val city = weatherBundle.city
-
         saveCity(city, weather)
 
         binding.cityName.text = city.city
@@ -126,7 +125,7 @@ class DetailsFragment : Fragment() {
     companion object {
 
         const val BUNDLE_EXTRA = "weather"
-        const val TAG = "lalala DetailsFragment"
+        const val TAG = "DetailsFragment"
 
         fun newInstance(bundle: Bundle): DetailsFragment {
             val fragment = DetailsFragment().apply {

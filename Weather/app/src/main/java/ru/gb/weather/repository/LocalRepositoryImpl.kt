@@ -51,7 +51,6 @@ class LocalRepositoryImpl(
         val handler = Handler(handlerThread.looper)
         handler.post {
             val historyEntities = localHistoryDataSource.selectByDatesInterval(dateFrom, dateTo)
-            println(historyEntities)
             for (historyEntity: HistoryEntity in historyEntities) {
                 val notes = convertNoteEntityListToNoteList(localNoteDataSource.selectAllByHistoryId(historyEntity.id))
                 val weather = convertHistoryEntityToWeather(historyEntity)

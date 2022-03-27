@@ -40,14 +40,12 @@ class DetailsFragmentAdapter :
     }
 
     override fun getItemCount(): Int {
-        Log.d(TAG, "getItemCount() called size: " + forecastParts.size)
         return forecastParts.size
     }
 
     inner class DetailsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(forecastPart: ForecastPart) {
-            Log.d(TAG, "bind() called with: forecastPart = $forecastPart")
             itemView.findViewById<TextView>(R.id.forecast_name).text = forecastPart.name.timeOfDay
             itemView.findViewById<TextView>(R.id.forecast_temp).text = forecastPart.getTemperatureString()
 

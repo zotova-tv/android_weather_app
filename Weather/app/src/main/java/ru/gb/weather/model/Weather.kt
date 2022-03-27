@@ -15,13 +15,13 @@ class Weather(
     val feelsLike: Int = 0,
     val condition: String = "sunny",
     val icon: String? = null,
-    val dateUnixTime: @RawValue Long = System.currentTimeMillis(), // 1522702800
+    val dateUnixTime: @RawValue Long = System.currentTimeMillis(),
     val notes: @RawValue MutableList<Note> = mutableListOf(),
     val forecastParts: MutableList<ForecastPart> = mutableListOf()
 ) : Parcelable {
     private val creationDateMillis: Long = System.currentTimeMillis()
     val creationDate: Date = Date(creationDateMillis)
-    val date: Date = Date(dateUnixTime * 1000)
+    val date: Date = Date(dateUnixTime)
 
     fun getTemperatureString(): String = WeatherUtils.getTemperatureString(temperature)
     fun getFeelsLikeString(): String = WeatherUtils.getTemperatureString(feelsLike)

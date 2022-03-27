@@ -50,7 +50,6 @@ class HistoryFragment : Fragment() {
             dateFrom = args.getLong(DATE_FROM_KEY)
             dateTo = args.getLong(DATE_TO_KEY)
         }
-        println("dates interval " + dateFrom + " " + dateTo)
         if(dateFrom != 0.toLong() && dateTo != 0.toLong()){
             viewModel.getHistoryListByDatesInterval(dateFrom, dateTo)
         }else{
@@ -64,9 +63,6 @@ class HistoryFragment : Fragment() {
                 with(binding) {
                     historyFragmentRecyclerview.show()
                     includedLoadingLayout.loadingLayout.hide()
-                }
-                for(weather in appState.weatherData){
-                    println(weather.city.city + " " + weather.dateUnixTime)
                 }
                 adapter.setData(appState.weatherData)
             }
