@@ -53,7 +53,6 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_history_for_week -> {
                 val today = Date(System.currentTimeMillis())
                 val daysAgo7 = Date(System.currentTimeMillis()).addDays(-7)
-                println(daysAgo7.getMillis().toString() + " " + today.getMillis().toString())
                 addFragment(HistoryFragment.newInstance(daysAgo7.getMillis(), today.getMillis()), HISTORY_FRAGMENT)
                 true
             }
