@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import ru.gb.weather.databinding.MainActivityBinding
 import ru.gb.weather.view.history.HistoryFragment
 import ru.gb.weather.R
+import ru.gb.weather.utils.addDays
 import ru.gb.weather.utils.getMillis
 import ru.gb.weather.view.contentprovider.ContactListFragment
 import java.util.*
@@ -51,19 +52,13 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.menu_history_for_week -> {
                 val today = Date(System.currentTimeMillis())
-                val daysAgo7 = addDaysToDate(today, -7)
+                val daysAgo7 = Date(System.currentTimeMillis()).addDays(-7)
+                println(daysAgo7.getMillis().toString() + " " + today.getMillis().toString())
                 addFragment(HistoryFragment.newInstance(daysAgo7.getMillis(), today.getMillis()), HISTORY_FRAGMENT)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun addDaysToDate(date: Date, days: Int): Date{
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        calendar.add(Calendar.DATE, days)
-        return calendar.time
     }
 
     private fun addFragment(fragment: Fragment, backStackName: String){

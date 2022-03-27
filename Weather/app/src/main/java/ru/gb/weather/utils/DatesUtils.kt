@@ -7,3 +7,10 @@ fun Date.getMillis(): Long{
     calendar.time = this
     return calendar.timeInMillis
 }
+
+fun Date.addDays(days: Int): Date{
+    val calendar = Calendar.getInstance()
+    calendar.time = this
+    calendar.add(Calendar.DATE, days)
+    return calendar.time
+}
