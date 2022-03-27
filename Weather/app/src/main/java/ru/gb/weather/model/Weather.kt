@@ -4,6 +4,8 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import ru.gb.weather.utils.WeatherUtils
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Parcelize
@@ -13,16 +15,17 @@ class Weather(
     val feelsLike: Int = 0,
     val condition: String = "sunny",
     val icon: String? = null,
-    val dateUnixTime: @RawValue Long = System.currentTimeMillis() / 1000, // 1522702800
+    val dateUnixTime: @RawValue Long = System.currentTimeMillis(), // 1522702800
     val notes: @RawValue MutableList<Note> = mutableListOf(),
     val forecastParts: MutableList<ForecastPart> = mutableListOf()
 ) : Parcelable {
-    val creationDateMillis: Long = System.currentTimeMillis()
+    private val creationDateMillis: Long = System.currentTimeMillis()
     val creationDate: Date = Date(creationDateMillis)
     val date: Date = Date(dateUnixTime * 1000)
 
     fun getTemperatureString(): String = WeatherUtils.getTemperatureString(temperature)
     fun getFeelsLikeString(): String = WeatherUtils.getTemperatureString(feelsLike)
+    fun getDateString(): String = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(date)
 }
 
 fun getDefaultCity() = City("Москва", 55.755826, 37.617299900000035)

@@ -9,7 +9,7 @@ fun convertDtoToModel(weatherDTO: WeatherDTO): Weather {
     if (weatherDTO.fact != null && weatherDTO.forecast != null){
         val fact: FactDTO = weatherDTO.fact
         val forecast: ForecastDTO = weatherDTO.forecast
-        weather = Weather(getDefaultCity(), fact.temp!!, fact.feels_like!!, fact.condition!!, fact.icon, forecast.date_ts!!)
+        weather = Weather(getDefaultCity(), fact.temp!!, fact.feels_like!!, fact.condition!!, fact.icon, forecast.date_ts!! * 1000)
         for (part in forecast.parts){
             part.temp_avg?.let { temp_avg ->
                 val forecastName = when(part.part_name){
@@ -34,11 +34,11 @@ fun convertHistoryEntityListToWeatherList(entityList: List<HistoryEntity>): List
 }
 
 fun convertHistoryEntityToWeather(historyEntity: HistoryEntity): Weather {
-    return Weather(City(historyEntity.city, 0.0, 0.0), historyEntity.temperature, 0, historyEntity.condition)
+    return Weather(City(historyEntity.city, 0.0, 0.0), historyEntity.temperature, 0, historyEntity.condition, dateUnixTime=historyEntity.date / 1000)
 }
 
 fun convertWeatherToEntity(weather: Weather): HistoryEntity {
-    return HistoryEntity(0, weather.city.city, weather.temperature, weather.condition)
+    return HistoryEntity(0, date=weather.dateUnixTime, weather.city.city, weather.temperature, weather.condition)
 }
 
 fun convertNoteEntityListToNoteList(noteEntityList: List<NoteEntity>): List<Note> {

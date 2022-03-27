@@ -4,9 +4,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import ru.gb.weather.databinding.MainActivityBinding
 import ru.gb.weather.view.history.HistoryFragment
 import ru.gb.weather.R
+import ru.gb.weather.utils.getMillis
+import ru.gb.weather.view.contentprovider.ContactListFragment
+import java.util.*
+
+
+private const val HISTORY_FRAGMENT = "HISTORY_FRAGMENT"
+private const val CONTACT_LIST_FRAGMENT = "CONTENT_PROVIDER_FRAGMENT"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainActivityBinding
@@ -34,15 +42,36 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
 
             R.id.menu_history -> {
-                supportFragmentManager.apply {
-                    beginTransaction()
-                        .add(R.id.container, HistoryFragment.newInstance())
-                        .addToBackStack("")
-                        .commitAllowingStateLoss()
-                }
+                addFragment(HistoryFragment.newInstance(), HISTORY_FRAGMENT)
+                true
+            }
+            R.id.menu_contact_list -> {
+                addFragment(ContactListFragment.newInstance(), CONTACT_LIST_FRAGMENT)
+                true
+            }
+            R.id.menu_history_for_week -> {
+                val today = Date(System.currentTimeMillis())
+                val daysAgo7 = addDaysToDate(today, -7)
+                addFragment(HistoryFragment.newInstance(daysAgo7.getMillis(), today.getMillis()), HISTORY_FRAGMENT)
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun addDaysToDate(date: Date, days: Int): Date{
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.add(Calendar.DATE, days)
+        return calendar.time
+    }
+
+    private fun addFragment(fragment: Fragment, backStackName: String){
+        supportFragmentManager.apply {
+            beginTransaction()
+                .add(R.id.container, fragment)
+                .addToBackStack(backStackName)
+                .commitAllowingStateLoss()
         }
     }
 }

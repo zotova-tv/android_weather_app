@@ -118,8 +118,9 @@ class DetailsFragment : Fragment() {
             city,
             weather.temperature,
             weather.feelsLike,
-            weather.condition)
-        )
+            weather.condition,
+            dateUnixTime=weather.dateUnixTime
+        ))
     }
 
     companion object {
