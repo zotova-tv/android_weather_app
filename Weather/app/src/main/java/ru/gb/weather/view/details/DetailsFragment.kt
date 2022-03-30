@@ -85,6 +85,7 @@ class DetailsFragment : Fragment() {
             city.lat.toString(),
             city.lon.toString()
         )
+        binding.date.text = weather.getDateString()
         binding.temperatureValue.text = weather.getTemperatureString()
         binding.feelsLikeValue.text = weather.getFeelsLikeString()
         binding.weatherCondition.text = weather.condition
@@ -103,10 +104,10 @@ class DetailsFragment : Fragment() {
             binding.detailsFragmentRecyclerView.adapter = this
         }
 
-        Picasso
-            .get()
-            .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
-            .into(binding.headerIcon)
+//        Picasso
+//            .get()
+//            .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
+//            .into(binding.headerIcon)
     }
 
     private fun saveCity(

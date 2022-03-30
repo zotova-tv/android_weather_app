@@ -48,7 +48,6 @@ class DetailsFragmentAdapter :
         fun bind(forecastPart: ForecastPart) {
             itemView.findViewById<TextView>(R.id.forecast_name).text = forecastPart.name.timeOfDay
             itemView.findViewById<TextView>(R.id.forecast_temp).text = forecastPart.getTemperatureString()
-
             val iconView: AppCompatImageView = itemView.findViewById<AppCompatImageView>(R.id.forecast_icon)
             forecastPart.icon?.let {
                 val svgImageLoader = ImageLoader.Builder(iconView.context)

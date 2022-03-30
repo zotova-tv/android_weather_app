@@ -13,15 +13,6 @@
         android:layout_height="match_parent"
         android:background="@color/black">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/headerIcon"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/town_header_height"
-            android:scaleType="fitXY"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
@@ -34,6 +25,17 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="17 Jan 2020" />
 
+        <!--
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/headerIcon"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/town_header_height"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date" />
+        -->
+
         <TextView
             android:id="@+id/cityName"
             android:layout_width="wrap_content"
@@ -43,8 +45,9 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/date"
-            tools:text="Москва" />
+            app:layout_constraintTop_toBottomOf="@id/date"
+            tools:text="Москва"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/cityCoordinates"

@@ -11,11 +11,14 @@ import ru.gb.weather.R
 import ru.gb.weather.utils.addDays
 import ru.gb.weather.utils.getMillis
 import ru.gb.weather.view.contentprovider.ContactListFragment
+import ru.gb.weather.view.googlemaps.GoogleMapsFragment
 import java.util.*
 
 
 private const val HISTORY_FRAGMENT = "HISTORY_FRAGMENT"
-private const val CONTACT_LIST_FRAGMENT = "CONTENT_PROVIDER_FRAGMENT"
+private const val CONTACT_LIST_FRAGMENT = "CONTACT_LIST_FRAGMENT"
+private const val GOOGLE_MAPS_FRAGMENT = "GOOGLE_MAPS_FRAGMENT"
+private const val EMPTY_STRING = ""
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainActivityBinding
@@ -56,11 +59,15 @@ class MainActivity : AppCompatActivity() {
                 addFragment(HistoryFragment.newInstance(daysAgo7.getMillis(), today.getMillis()), HISTORY_FRAGMENT)
                 true
             }
+            R.id.menu_google_maps -> {
+                addFragment(GoogleMapsFragment.newInstance(), GOOGLE_MAPS_FRAGMENT)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun addFragment(fragment: Fragment, backStackName: String){
+    private fun addFragment(fragment: Fragment, backStackName: String = EMPTY_STRING){
         supportFragmentManager.apply {
             beginTransaction()
                 .add(R.id.container, fragment)

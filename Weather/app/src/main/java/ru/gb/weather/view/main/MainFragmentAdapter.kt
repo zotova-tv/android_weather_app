@@ -1,14 +1,22 @@
 package ru.gb.weather.view.main
 
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.model.LatLng
 import ru.gb.weather.R
 import ru.gb.weather.model.Weather
+import ru.gb.weather.view.googlemaps.GoogleMapsFragment
 
-class MainFragmentAdapter(private var onItemViewClickListener: MainFragment.OnItemViewClickListener?) :
+class MainFragmentAdapter(
+    private var onItemViewClickListener: MainFragment.OnItemViewClickListener?,
+    private var onItemViewLongClickListener: MainFragment.OnItemViewLongClickListener?
+) :
     RecyclerView.Adapter<MainFragmentAdapter.MainViewHolder>() {
 
     private var weatherData: List<Weather> = listOf()
@@ -42,11 +50,16 @@ class MainFragmentAdapter(private var onItemViewClickListener: MainFragment.OnIt
             itemView.apply {
                 findViewById<TextView>(R.id.mainFragmentRecyclerItemTextView).text = weather.city.city
                 setOnClickListener {onItemViewClickListener?.onItemViewClick(weather)}
+                setOnLongClickListener{onItemViewLongClickListener?.onItemViewLongClick(this, weather) ?: true}
             }
         }
     }
 
-    fun removeListener() {
+    fun removeClickListener() {
+        onItemViewClickListener = null
+    }
+
+    fun removeLongClickListener() {
         onItemViewClickListener = null
     }
 }
