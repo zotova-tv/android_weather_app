@@ -63,7 +63,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 WARNING_CHANNEL_ID -> {
                     createNotificationChannel(
                         notificationManager,
-                        channelId,
+                        WARNING_CHANNEL_ID,
                         WARNING_CHANNEL_TITLE,
                         WARNING_CHANNEL_DESCRIPTION,
                         NotificationManager.IMPORTANCE_HIGH
@@ -72,7 +72,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 else -> {
                     createNotificationChannel(
                         notificationManager,
-                        channelId,
+                        COMMON_CHANNEL_ID,
                         COMMON_CHANNEL_TITLE,
                         COMMON_CHANNEL_DESCRIPTION
                     )
