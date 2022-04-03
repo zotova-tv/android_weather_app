@@ -11,8 +11,8 @@
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/advertising"
         android:gravity="center"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="@dimen/ad_block_margin"
+        android:layout_marginTop="@dimen/ad_block_margin"
         android:textColor="@color/light_grey"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
