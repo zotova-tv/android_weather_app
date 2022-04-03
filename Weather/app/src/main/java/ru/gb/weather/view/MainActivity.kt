@@ -2,9 +2,11 @@ package ru.gb.weather.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import ru.gb.weather.BuildConfig
 import ru.gb.weather.databinding.MainActivityBinding
 import ru.gb.weather.view.history.HistoryFragment
 import ru.gb.weather.R
@@ -19,12 +21,18 @@ private const val HISTORY_FRAGMENT = "HISTORY_FRAGMENT"
 private const val CONTACT_LIST_FRAGMENT = "CONTACT_LIST_FRAGMENT"
 private const val GOOGLE_MAPS_FRAGMENT = "GOOGLE_MAPS_FRAGMENT"
 private const val EMPTY_STRING = ""
+private const val DEBUG_VERSION = BuildConfig.TYPE == "DEBUG"
+private const val DEBUG_LOG_TAG = "Weather app debug logs"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (DEBUG_VERSION){
+            Log.d(DEBUG_LOG_TAG, "onCreate() called with: savedInstanceState = $savedInstanceState")
+        }
 
         binding = MainActivityBinding.inflate(layoutInflater)
         val view = binding.root

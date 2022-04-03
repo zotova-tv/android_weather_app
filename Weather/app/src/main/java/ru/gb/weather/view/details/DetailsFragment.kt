@@ -85,7 +85,7 @@ class DetailsFragment : Fragment() {
             city.lat.toString(),
             city.lon.toString()
         )
-        binding.date.text = weather.getDateString()
+        binding.date.text = weather.getDatePrettyString()
         binding.temperatureValue.text = weather.getTemperatureString()
         binding.feelsLikeValue.text = weather.getFeelsLikeString()
         binding.weatherCondition.text = weather.condition
