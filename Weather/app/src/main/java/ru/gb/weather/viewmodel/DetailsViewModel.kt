@@ -50,7 +50,9 @@ class DetailsViewModel(
     }
 
     fun saveCityToDB(weather: Weather) {
-        historyRepositoryImpl.saveEntity(weather)
+        Thread{
+            historyRepositoryImpl.saveEntity(weather)
+        }.start()
     }
 
     fun getWeatherFromRemoteSource(lat: Double, lon: Double) {

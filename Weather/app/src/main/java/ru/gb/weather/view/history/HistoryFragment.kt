@@ -1,6 +1,7 @@
 package ru.gb.weather.view.history
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer

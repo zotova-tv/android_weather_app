@@ -1,7 +1,6 @@
 package ru.gb.weather
 
 import android.app.Application
-import androidx.room.Database
 import androidx.room.Room
 import ru.gb.weather.model.room.HistoryDao
 import ru.gb.weather.model.room.HistoryDataBase
@@ -20,7 +19,7 @@ class App : Application() {
         private var db : HistoryDataBase? = null
         private const val DB_NAME = "History.db"
 
-        private fun getDb(): HistoryDataBase {
+        private fun buildDbIfNull() {
             synchronized(HistoryDataBase::class.java) {
                 if (db == null) {
                     if (appInstance == null) throw IllegalStateException("APP must not be null")
@@ -32,21 +31,18 @@ class App : Application() {
                     )
                         .build()
                 }
-                return db!!
             }
         }
 
         fun getHistoryDao() : HistoryDao {
 
-            db = getDb()
-
+            buildDbIfNull()
             return db!!.historyDao()
         }
 
         fun getNoteDao() : NoteDao {
 
-            db = getDb()
-
+            buildDbIfNull()
             return db!!.noteDao()
         }
     }
