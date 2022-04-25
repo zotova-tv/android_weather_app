@@ -22,7 +22,7 @@ class AddNoteViewModel(
                 handler.post {
                     noteLiveData.value = AppState.Success(listOf(note.weather))
                 }
-            }
+            }.start()
         }else{
             noteLiveData.value = AppState.Error(Throwable(SAVE_ERROR_MSG))
         }

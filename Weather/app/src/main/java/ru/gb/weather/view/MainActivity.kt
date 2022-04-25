@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
 
             R.id.menu_history -> {
                 addFragment(HistoryFragment.newInstance(), HISTORY_FRAGMENT)
-                println("history fragment")
                 true
             }
             R.id.menu_contact_list -> {
