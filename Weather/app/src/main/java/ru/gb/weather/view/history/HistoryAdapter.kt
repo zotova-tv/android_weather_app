@@ -25,7 +25,7 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.RecyclerItemViewHolde
         fun bind(data: Weather) {
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.recyclerViewItem.text =
-                    String.format("%s %d %s", data.city.city, data.temperature, data.condition)
+                    String.format("%s %s %d %s", data.getDateString(), data.city.city, data.temperature, data.condition)
                 var commentText = ""
                 for(note: Note in data.notes){
                     commentText += note.text + "\n"

@@ -11,8 +11,12 @@
     <string name="sorry_error">Sorry, there was an error in the application</string>
 
     <string name="menu_title_history">history</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_your_comment">Add your comment</string>
     <string name="save_note_text">Save note</string>
+
+    <string name="content_provider">Content provider</string>
+    <string name="authorities">ru.gb.weatherapp.geekbrains.provider</string>
+    <string name="history_for_week">History for week</string>
+    <string name="contact_list">Contact list</string>
 </resources>

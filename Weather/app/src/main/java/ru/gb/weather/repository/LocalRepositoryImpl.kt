@@ -2,14 +2,12 @@ package ru.gb.weather.repository
 
 import android.os.Handler
 import android.os.HandlerThread
-import okhttp3.internal.wait
 import ru.gb.weather.App
 import ru.gb.weather.model.Note
 import ru.gb.weather.model.Weather
 import ru.gb.weather.model.room.HistoryDao
 import ru.gb.weather.model.room.HistoryEntity
 import ru.gb.weather.model.room.NoteDao
-import ru.gb.weather.utils.convertHistoryEntityListToWeatherList
 import ru.gb.weather.utils.convertHistoryEntityToWeather
 import ru.gb.weather.utils.convertNoteEntityListToNoteList
 import ru.gb.weather.utils.convertWeatherToEntity
@@ -31,6 +29,28 @@ class LocalRepositoryImpl(
         val handler = Handler(handlerThread.looper)
         handler.post {
             val historyEntities = localHistoryDataSource.all()
+            for (historyEntity: HistoryEntity in historyEntities) {
+                val notes = convertNoteEntityListToNoteList(localNoteDataSource.selectAllByHistoryId(historyEntity.id))
+                val weather = convertHistoryEntityToWeather(historyEntity)
+                for(note: Note in notes){
+                    weather.notes.add(note)
+                }
+                weatherList.add(weather)
+            }
+        }
+        handlerThread.quitSafely()
+        handlerThread.join()
+        return weatherList
+    }
+
+    override fun getHistoryByDatesInterval(dateFrom: Long, dateTo: Long): List<Weather> {
+        val weatherList = mutableListOf<Weather>()
+
+        val handlerThread = HandlerThread(GET_ALL_HISTORY_THREAD_NAME)
+        handlerThread.start()
+        val handler = Handler(handlerThread.looper)
+        handler.post {
+            val historyEntities = localHistoryDataSource.selectByDatesInterval(dateFrom, dateTo)
             for (historyEntity: HistoryEntity in historyEntities) {
                 val notes = convertNoteEntityListToNoteList(localNoteDataSource.selectAllByHistoryId(historyEntity.id))
                 val weather = convertHistoryEntityToWeather(historyEntity)

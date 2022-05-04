@@ -2,7 +2,6 @@ package ru.gb.weather.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.gb.weather.App
 import ru.gb.weather.repository.LocalRepositoryImpl
 
 class HistoryViewModel(
@@ -13,5 +12,10 @@ class HistoryViewModel(
     fun getAllHistory() {
         historyLiveData.value = AppState.Loading
         historyLiveData.value = AppState.Success(historyRepositoryImpl.getAllHistory())
+    }
+
+    fun getHistoryListByDatesInterval(dateFrom: Long, dateTo: Long){
+        historyLiveData.value = AppState.Loading
+        historyLiveData.value = AppState.Success(historyRepositoryImpl.getHistoryByDatesInterval(dateFrom, dateTo))
     }
 }

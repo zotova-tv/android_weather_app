@@ -1,6 +1,7 @@
 package ru.gb.weather
 
 import android.app.Application
+import androidx.room.Database
 import androidx.room.Room
 import ru.gb.weather.model.room.HistoryDao
 import ru.gb.weather.model.room.HistoryDataBase

@@ -38,4 +38,5 @@
     <dimen name="save_comment_text_size">20sp</dimen>
     <dimen name="add_comment_padding">10sp</dimen>
     <dimen name="fragment_history_padding">5dp</dimen>
+    <dimen name="main_container_text_size">10sp</dimen>
 </resources>
