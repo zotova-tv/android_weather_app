@@ -2,6 +2,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +15,8 @@ import ru.gb.weather.utils.showActionSnackBar
 import ru.gb.weather.view.main.MainFragmentAdapter
 import ru.gb.weather.viewmodel.AppState
 import ru.gb.weather.viewmodel.MainViewModel
+
+private const val IS_WORLD_KEY = "IS_WORLD_KEY"
 
 class MainFragment : Fragment() {
 
@@ -50,7 +53,23 @@ class MainFragment : Fragment() {
         binding.mainFragmentRecyclerView.adapter = adapter
         binding.mainFragmentFAB.setOnClickListener { changeWeatherDataSet() }
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) })
-        viewModel.getWeatherFromLocalSourceRus()
+        showListOfTowns()
+    }
+
+    private fun showListOfTowns() {
+        activity?.let {
+            if(it.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WORLD_KEY, false))
+                changeWeatherDataSet() else viewModel.getWeatherFromLocalSourceRus()
+        }
+    }
+
+    private fun saveListOfTowns() {
+        activity?.let {
+            with(it.getPreferences(Context.MODE_PRIVATE).edit()) {
+                putBoolean(IS_WORLD_KEY, !isDataSetRus)
+                apply()
+            }
+        }
     }
 
     private fun changeWeatherDataSet() {
@@ -63,19 +82,20 @@ class MainFragment : Fragment() {
         }.also {
             isDataSetRus = !isDataSetRus
         }
+        saveListOfTowns()
     }
 
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
-                binding.mainFragmentLoadingLayout.hide()
+                binding.includedLoadingLayout.loadingLayout.hide()
                 adapter.setWeather(appState.weatherData)
             }
             is AppState.Loading -> {
-                binding.mainFragmentLoadingLayout.show()
+                binding.includedLoadingLayout.loadingLayout.show()
             }
             is AppState.Error -> {
-                binding.mainFragmentLoadingLayout.hide()
+                binding.includedLoadingLayout.loadingLayout.hide()
                 binding.mainFragmentRootView.showActionSnackBar(
                     getString(R.string.error),
                     getString(R.string.reload),

@@ -1,6 +1,8 @@
 package ru.gb.weather.utils
 
 import ru.gb.weather.model.*
+import ru.gb.weather.model.room.HistoryEntity
+import ru.gb.weather.model.room.NoteEntity
 
 fun convertDtoToModel(weatherDTO: WeatherDTO): Weather {
     lateinit var weather: Weather
@@ -23,4 +25,32 @@ fun convertDtoToModel(weatherDTO: WeatherDTO): Weather {
         weather = Weather()
     }
     return weather
+}
+
+fun convertHistoryEntityListToWeatherList(entityList: List<HistoryEntity>): List<Weather> {
+    return entityList.map {
+        convertHistoryEntityToWeather(it)
+    }
+}
+
+fun convertHistoryEntityToWeather(historyEntity: HistoryEntity): Weather {
+    return Weather(City(historyEntity.city, 0.0, 0.0), historyEntity.temperature, 0, historyEntity.condition)
+}
+
+fun convertWeatherToEntity(weather: Weather): HistoryEntity {
+    return HistoryEntity(0, weather.city.city, weather.temperature, weather.condition)
+}
+
+fun convertNoteEntityListToNoteList(noteEntityList: List<NoteEntity>): List<Note> {
+    return noteEntityList.map {
+        convertNoteEntityToNote(it)
+    }
+}
+
+fun convertNoteEntityToNote(noteEntity: NoteEntity): Note {
+    return Note(noteEntity.text)
+}
+
+fun convertNoteToNoteEntity(note: Note): NoteEntity {
+    return NoteEntity(0, note.text)
 }
