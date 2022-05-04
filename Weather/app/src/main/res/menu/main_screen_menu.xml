@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_history"
+        android:icon="@drawable/ic_history"
+        android:title="@string/menu_title_history"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_google_maps"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="@string/google_maps"
+        app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/menu_contact_list"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="@string/contact_list"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/menu_history_for_week"
+        android:icon="@drawable/ic_history"
+        android:title="@string/history_for_week"
+        app:showAsAction="collapseActionView" />
+</menu>

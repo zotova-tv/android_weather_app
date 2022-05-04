@@ -1,19 +1,24 @@
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
-import com.google.android.material.snackbar.Snackbar
-import ru.gb.kotlinapp.view.details.WeatherLoader
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.load
+import com.squareup.picasso.Picasso
 import ru.gb.weather.R
 import ru.gb.weather.databinding.FragmentDetailsBinding
 import ru.gb.weather.model.*
-import ru.gb.weather.view.details.DetailsFragmentAdapter
-import java.net.MalformedURLException
-import java.text.SimpleDateFormat
-import java.util.*
+import ru.gb.weather.utils.*
+import ru.gb.weather.view.history.AddNoteFragment
+import ru.gb.weather.view.details.*
+import ru.gb.weather.viewmodel.AppState
+import ru.gb.weather.viewmodel.DetailsViewModel
+
+const val ICON_PATH = "https://yastatic.net/weather/i/icons/funky/dark/"
+const val ICON_EXT = ".svg"
+const val ADD_NOTE_FRAGMENT_KEY = "ADD_NOTE_FRAGMENT"
 
 class DetailsFragment : Fragment() {
 
@@ -21,39 +26,16 @@ class DetailsFragment : Fragment() {
     private val binding get() = _binding!!
     private val adapter = DetailsFragmentAdapter()
 
-    private lateinit var loader: WeatherLoader
     private lateinit var weatherBundle: Weather
 
-    private val onLoadListener: WeatherLoader.WeatherLoaderListener =
-        object : WeatherLoader.WeatherLoaderListener {
-
-            override fun onLoaded(weatherDTO: WeatherDTO) {
-                displayWeather(weatherDTO)
-            }
-
-            override fun onFailed(throwable: Throwable) {
-                Log.d(TAG, "onFailed() called with: throwable = $throwable")
-                with(binding){
-                    mainView.show()
-                    loadingLayout.hide()
-                }
-                when (throwable) {
-                    is MalformedURLException -> binding.detailFragmentRootView.showSnackBar(
-                        R.string.sorry_error
-                    )
-                    else -> binding.detailFragmentRootView.showActionSnackBar(
-                        R.string.connection_error,
-                        R.string.reload,
-                        { loader.loadWeather() }
-                    )
-                }
-            }
-        }
+    private val viewModel: DetailsViewModel by lazy {
+        ViewModelProvider(this)[DetailsViewModel::class.java]
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(true);
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -61,68 +43,90 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         weatherBundle = arguments?.getParcelable<Weather>(BUNDLE_EXTRA) ?: Weather()
-        with(binding){
-            mainView.hide()
-            loadingLayout.show()
-        }
-
-        loader = WeatherLoader(onLoadListener, weatherBundle.city.lat, weatherBundle.city.lon).also{
-            it.loadWeather()
-        }
+        viewModel.detailsLiveData.observe(viewLifecycleOwner, Observer { renderData(it) })
+        requestWeather()
     }
 
-    private fun displayWeather(weatherDTO: WeatherDTO) {
-        with (binding) {
-            mainView.show()
-            loadingLayout.hide()
-
-            with(weatherBundle.city) {
-                cityName.text = this.city
-                cityCoordinates.text = String.format(
-                    getString(R.string.city_coordinates),
-                    this.lat.toString(),
-                    this.lon.toString()
-                )
+    private fun renderData(appState: AppState) {
+        when (appState) {
+            is AppState.Success -> {
+                binding.mainView.show()
+                binding.includedLoadingLayout.loadingLayout.hide()
+                setWeather(appState.weatherData[0])
             }
-
-            weatherDTO.fact?.let { factDto ->
-                weatherCondition.text = factDto.condition
-                temperatureValue.text = WeatherUtils.getTemperatureString(factDto.temp ?: 0)
-                feelsLikeValue.text = WeatherUtils.getTemperatureString(factDto.feels_like ?: 0)
+            is AppState.Loading -> {
+                binding.mainView.hide()
+                binding.includedLoadingLayout.loadingLayout.show()
             }
-
-            weatherDTO.forecast?.parts?.let {
-                val forecastParts: MutableList<ForecastPart> = mutableListOf()
-                it.map { forecastPartDTO ->
-                    val forecastName: ForecastName? = when (forecastPartDTO.part_name) {
-                        ForecastName.Morning.timeOfDayCode -> ForecastName.Morning
-                        ForecastName.Evening.timeOfDayCode -> ForecastName.Evening
-                        ForecastName.Day.timeOfDayCode -> ForecastName.Day
-                        ForecastName.Night.timeOfDayCode -> ForecastName.Night
-                        else -> null
-                    }
-
-                    forecastName?.let {forecastName ->
-                        forecastParts.add(
-                            ForecastPart(forecastName, temperature = forecastPartDTO.temp_avg ?: 0)
-                        )
-                    }
-
-                }
-                with(adapter) {
-                    setForecastParts(forecastParts)
-                    binding.detailsFragmentRecyclerView.adapter = this
-                }
+            is AppState.Error -> {
+                binding.mainView.show()
+                binding.includedLoadingLayout.loadingLayout.hide()
+                binding.mainView.showActionSnackBar(
+                    getString(R.string.error),
+                    getString(R.string.reload),
+                    {
+                        requestWeather()
+                    })
             }
         }
     }
 
-    fun Date.getFormattedDate(format: String = "dd MMMM YYYY"): String = SimpleDateFormat(format, Locale.getDefault()).format(this)
+    private fun requestWeather() {
+        viewModel.getWeatherFromRemoteSource(weatherBundle.city.lat, weatherBundle.city.lon)
+    }
+
+    private fun setWeather(weather: Weather) {
+        val city = weatherBundle.city
+        saveCity(city, weather)
+
+        binding.cityName.text = city.city
+        binding.cityCoordinates.text = String.format(
+            getString(R.string.city_coordinates),
+            city.lat.toString(),
+            city.lon.toString()
+        )
+        binding.date.text = weather.getDateString()
+        binding.temperatureValue.text = weather.getTemperatureString()
+        binding.feelsLikeValue.text = weather.getFeelsLikeString()
+        binding.weatherCondition.text = weather.condition
+
+        weather.icon?.let {
+            val svgImageLoader = ImageLoader.Builder(requireContext())
+                .components {
+                    add(SvgDecoder.Factory())
+                }
+                .build()
+            binding.conditionIcon.load(ICON_PATH + it + ICON_EXT, svgImageLoader)
+        }
+
+        with(adapter) {
+            setForecastParts(weather.forecastParts)
+            binding.detailsFragmentRecyclerView.adapter = this
+        }
+
+//        Picasso
+//            .get()
+//            .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
+//            .into(binding.headerIcon)
+    }
+
+    private fun saveCity(
+        city: City,
+        weather: Weather
+    ) {
+        viewModel.saveCityToDB(Weather(
+            city,
+            weather.temperature,
+            weather.feelsLike,
+            weather.condition,
+            dateUnixTime=weather.dateUnixTime
+        ))
+    }
 
     companion object {
 
         const val BUNDLE_EXTRA = "weather"
-        const val TAG = "lalala DetailsFragment"
+        const val TAG = "DetailsFragment"
 
         fun newInstance(bundle: Bundle): DetailsFragment {
             val fragment = DetailsFragment().apply {
@@ -132,33 +136,24 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    private fun View.show(): View {
-        if(visibility != View.VISIBLE){
-            visibility = View.VISIBLE
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.details_menu, menu)
+        return super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+
+            R.id.menu_note -> {
+                this.parentFragmentManager.apply {
+                    beginTransaction()
+                        .add(R.id.container, AddNoteFragment.newInstance(weatherBundle))
+                        .addToBackStack(ADD_NOTE_FRAGMENT_KEY)
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        return this
-    }
-
-    private fun View.hide(): View {
-        if(visibility != View.GONE){
-            visibility = View.GONE
-        }
-        return this
-    }
-
-    private fun View.showSnackBar(
-        resourceText: Int,
-        length: Int = Snackbar.LENGTH_SHORT
-    ) {
-        Snackbar.make(this, getString(resourceText), length).show()
-    }
-
-    private fun View.showActionSnackBar(
-        resourceText: Int,
-        resourceActionText: Int,
-        action: (View) -> Unit,
-        length: Int = Snackbar.LENGTH_INDEFINITE
-    ) {
-        Snackbar.make(this, getString(resourceText), length).setAction(getString(resourceActionText), action).show()
     }
 }

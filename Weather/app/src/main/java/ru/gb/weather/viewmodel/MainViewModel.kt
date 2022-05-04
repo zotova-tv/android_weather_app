@@ -2,15 +2,13 @@ package ru.gb.weather.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.gb.weather.model.Repository
-import ru.gb.weather.model.RepositoryImpl
-import ru.gb.weather.model.Weather
-import java.lang.Thread.sleep
-import kotlin.random.Random
+import ru.gb.weather.repository.Repository
+import ru.gb.weather.repository.RepositoryImpl
 
 class MainViewModel(
     private val liveDataToObserve : MutableLiveData<AppState> = MutableLiveData(),
-    private val repositoryImpl: Repository = RepositoryImpl())
+    private val repositoryImpl: Repository = RepositoryImpl()
+)
     : ViewModel() {
 
     fun getLiveData() = liveDataToObserve
@@ -22,7 +20,6 @@ class MainViewModel(
     private fun getDataFromLocalSource(isRussian: Boolean) {
         liveDataToObserve.value = AppState.Loading
         Thread {
-            sleep(1000)
             liveDataToObserve.postValue(AppState.Success(
                 when (isRussian) {
                     true -> repositoryImpl.getWeatherFromLocalStorageRus()

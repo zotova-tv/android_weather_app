@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="city_name_margin_top">50dp</dimen>
+    <dimen name="town_header_height">70dp</dimen>
     <dimen name="margin_15_dp">15dp</dimen>
     <dimen name="temperature_value_text_size">40sp</dimen>
     <dimen name="feels_like_text_size">30sp</dimen>
-    <dimen name="city_name_text_size">35sp</dimen>
+    <dimen name="city_name_text_size">25sp</dimen>
     <dimen name="margin_5_dp">5dp</dimen>
     <dimen name="fab_icon_size">56dp</dimen>
     <dimen name="fab_margin">15dp</dimen>
@@ -19,4 +20,25 @@
     <dimen name="forecast_temperature_text_size">35sp</dimen>
     <dimen name="city_item_margin">5dp</dimen>
     <dimen name="city_item_padding">10dp</dimen>
+    <dimen name="weather_icon_width">150dp</dimen>
+    <dimen name="weather_icon_height">150dp</dimen>
+    <dimen name="weather_icon_margin">110dp</dimen>
+    <dimen name="date_margin_top">30dp</dimen>
+    <dimen name="date_text_size">20sp</dimen>
+    <dimen name="condition_icon_width">100sp</dimen>
+    <dimen name="condition_icon_height">100sp</dimen>
+    <dimen name="condition_icon_margin">50sp</dimen>
+    <dimen name="forecast_icon_width">50sp</dimen>
+    <dimen name="forecast_icon_height">50sp</dimen>
+    <dimen name="hairline">1dp</dimen>
+    <dimen name="comment_title_text_size">20sp</dimen>
+    <dimen name="comment_title_margin_bottom">30sp</dimen>
+    <dimen name="comment_edit_text_height">300sp</dimen>
+    <dimen name="comment_edit_text_padding">10sp</dimen>
+    <dimen name="save_comment_text_size">20sp</dimen>
+    <dimen name="add_comment_padding">10sp</dimen>
+    <dimen name="fragment_history_padding">5dp</dimen>
+    <dimen name="main_container_text_size">10sp</dimen>
+
+    <dimen name="fab_location_icon_size">45dp</dimen>
 </resources>

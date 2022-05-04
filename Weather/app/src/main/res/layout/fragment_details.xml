@@ -17,13 +17,24 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:textSize="20sp"
+            android:layout_marginTop="@dimen/date_margin_top"
+            android:textSize="@dimen/date_text_size"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="17 Jan 2020" />
+
+        <!--
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/headerIcon"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/town_header_height"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date" />
+        -->
 
         <TextView
             android:id="@+id/cityName"
@@ -34,8 +45,9 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/date"
-            tools:text="Москва" />
+            app:layout_constraintTop_toBottomOf="@id/date"
+            tools:text="Москва"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/cityCoordinates"
@@ -59,6 +71,16 @@
             app:layout_constraintTop_toBottomOf="@+id/cityCoordinates"
             tools:text="Облачно" />
 
+        <ImageView
+            android:id="@+id/conditionIcon"
+            android:layout_width="@dimen/condition_icon_width"
+            android:layout_height="@dimen/condition_icon_height"
+            android:scaleType="fitXY"
+            android:layout_marginTop="@dimen/condition_icon_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/weatherCondition" />
+
         <TextView
             android:id="@+id/temperatureLabel"
             android:layout_width="wrap_content"
@@ -67,7 +89,7 @@
             android:text="@string/temperature_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/weatherCondition" />
+            app:layout_constraintTop_toBottomOf="@+id/conditionIcon" />
 
         <TextView
             android:id="@+id/temperatureValue"
@@ -114,19 +136,8 @@
             android:orientation="horizontal"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
-        android:id="@+id/loadingLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/loadingBackground"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+    <include
+        android:id="@+id/includedLoadingLayout"
+        layout="@layout/loading_layout" />
 </FrameLayout>
 
