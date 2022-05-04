@@ -22,7 +22,7 @@ private const val CONTACT_LIST_FRAGMENT = "CONTACT_LIST_FRAGMENT"
 private const val GOOGLE_MAPS_FRAGMENT = "GOOGLE_MAPS_FRAGMENT"
 private const val EMPTY_STRING = ""
 private const val DEBUG_VERSION = BuildConfig.TYPE == "DEBUG"
-private const val DEBUG_LOG_TAG = "Weather app debug logs"
+private const val DEBUG_LOG_TAG = "WeatherAppDebug"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainActivityBinding

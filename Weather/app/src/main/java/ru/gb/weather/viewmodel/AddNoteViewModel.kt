@@ -1,5 +1,6 @@
 package ru.gb.weather.viewmodel
 
+import android.os.Handler
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.gb.weather.App
@@ -15,8 +16,13 @@ class AddNoteViewModel(
 ) : ViewModel() {
     fun saveNote(note: Note){
         if(note.weather != null){
-            noteRepositoryImpl.saveNote(note)
-            noteLiveData.value = AppState.Success(listOf(note.weather))
+            val handler = Handler()
+            Thread{
+                noteRepositoryImpl.saveNote(note)
+                handler.post {
+                    noteLiveData.value = AppState.Success(listOf(note.weather))
+                }
+            }.start()
         }else{
             noteLiveData.value = AppState.Error(Throwable(SAVE_ERROR_MSG))
         }

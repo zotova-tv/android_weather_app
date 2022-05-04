@@ -4,7 +4,6 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 import ru.gb.weather.utils.WeatherUtils
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,7 +25,7 @@ class Weather(
     fun getTemperatureString(): String = WeatherUtils.getTemperatureString(temperature)
     fun getFeelsLikeString(): String = WeatherUtils.getTemperatureString(feelsLike)
     fun getDateString(): String = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(date)
-    fun getDatePrettyString(): String = SimpleDateFormat("d mmmm yyyy", Locale.ENGLISH).format(date)
+    fun getDatePrettyString(): String = SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH).format(date)
 }
 
 fun getDefaultCity() = City("Москва", 55.755826, 37.617299900000035)
