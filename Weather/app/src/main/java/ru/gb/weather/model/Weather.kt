@@ -26,6 +26,7 @@ class Weather(
     fun getTemperatureString(): String = WeatherUtils.getTemperatureString(temperature)
     fun getFeelsLikeString(): String = WeatherUtils.getTemperatureString(feelsLike)
     fun getDateString(): String = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(date)
+    fun getDatePrettyString(): String = SimpleDateFormat("d mmmm yyyy", Locale.ENGLISH).format(date)
 }
 
 fun getDefaultCity() = City("Москва", 55.755826, 37.617299900000035)
